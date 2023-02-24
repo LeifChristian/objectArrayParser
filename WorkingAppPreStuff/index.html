@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Object/Array Parser</title>
+    
+    <style>
+      body {
+        background-color: black;
+        color: green;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+   		
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 500px;
+					margin: auto;
+          word-wrap: break-word;
+        width: 100%;
+        max-width: 80%;
+        padding: 0 20px;
+        box-sizing: border-box;
+      }
+      .input-container {
+        margin-bottom: 10px; 
+				text-align: center;
+      }
+      .input-container label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .input-container input {
+        display: block;
+        width: 100%;
+        padding: 5px;
+        border-radius: 20px;
+        border: none;
+        background-color: #222;
+        color: green;
+      }
+      button {
+        padding: 5px;
+        border-radius: 20px;
+        border: none;
+        background-color: #444;
+        color: green;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #666;
+      }
+      .output {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #222;
+        border-radius: 20px;
+      }
+      .output ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      .output li {
+        margin-bottom: 5px;
+      }
+
+		h2 {		text-align: center;}
+    </style>
+  </head>
+  <body>
+
+  
+    <div style="margin: auto; text-align: center;">
+      <div style="margin: auto; text-align: center; margin-top: 10vh"><a href="https://jsonformatter.curiousconcept.com/" target="_blank">format your data HERE</a></div>
+      <h2>Object/Array Parser</h2>
+      <form>
+        <label for="input">Item to parse:</label>
+        <br />
+        <textarea id="input" name="input" rows="4" cols="50"></textarea>
+        <br /><br />
+        <button type="button" onclick="parseInput()">Submit</button>
+      </form>
+      <div id="output" style="display: none;">
+        <br />
+        <div id="data-title" style="color: green"></div>
+        <br />
+        <div id="objectProperties"></div>
+        <br />
+        <label for="field">Enter property or index:</label>
+        <br />
+        <input type="text" id="field" name="field" />
+        <button type="button" onclick="getField()">Get</button>
+        <br /><br />
+        <div id="result" style="color: green; word-wrap: break-word; max-width: 80vw;"></div>
+      </div>
+    </div>
+
+    <script>
+      function parseInput() {
+        const input = document.getElementById("input").value
+        let data, title;
+
+        try {
+
+const sanitizedInput = input.replaceAll("'", '"')
+console.log(sanitizedInput, '?????????');
+console.log(typeof sanitizedInput);
+
+// const data = JSON.parse(sanitizedInput);
+
+const otherData = JSON.parse(`${sanitizedInput.trim()}`);
+
+console.log(otherData, "fuck!");
+
+const data = otherData
+
+          // const sanitizedInput = input.replaceAll("'", '"').trim()
+          // console.log(sanitizedInput, '?????????');
+
+          console.log(typeof sanitizedInput);
+  
+          if (Array.isArray(data)) {
+            title = `Array length: ${data.length -1}`;
+          } else if (typeof data === "object") {
+            title = "Object properties:";
+            const properties = Object.keys(data);
+            const objectPropertiesDiv = document.getElementById("objectProperties");
+            objectPropertiesDiv.innerHTML = properties
+              .map((property) => `<a href="#" onclick="setField('${property}')">${property}</a>`)
+              .join(", ");
+          } else {
+            alert("Invalid syntax");
+            return;
+          }
+          document.getElementById("output").style.display = "block";
+          document.getElementById("data-title").innerHTML = title;
+        } catch (err) {
+          alert("Invalid JSON input");
+        }
+      }
+
+      function getFieldog() {
+
+        const field = document.getElementById("field").value.trim();
+        const data = JSON.parse(document.getElementById("input").value.replaceAll(`'`,`"`).trim())
+
+        let result = "";
+        if (Array.isArray(data) && /^\d+$/.test(field)) {
+          console.log('arr');
+          const index = parseInt(field);
+          if (index < data.length) {
+            result = data[index];
+          }
+        } else if (typeof data === "object" && typeof field === "string") {
+          result = data[field];
+          console.log('obj');
+        }
+        document.getElementById("result").innerHTML =
+          result === "" ? "Invalid field" : JSON.stringify(result);
+          console.log(result)
+          console.log(typeof result);
+
+if(Array.isArray(result) && result.length > 0){
+  const index = prompt(`Enter index 0 - ${result.length -1}: `);
+
+
+  console.log(index);
+  if(/^\d+$/.test(index) && index < result.length) {
+    document.getElementById('result').innerHTML = JSON.stringify(result[index])
+  } else {
+    result = "Invalid index";
+  }
+}
+
+      }
+
+function fixJsonString(inputString) {
+  const regex = /([a-zA-Z0-9-]*)(:\s?)(?=\[|\{|\d)/g;
+  const jsonString = inputString.replace(regex, '"$1"$2');
+  return jsonString;
+}
+
+
+      function getField() {
+  const field = document.getElementById("field").value.trim();
+  const data = JSON.parse(document.getElementById("input").value.replaceAll(`'`,`"`).trim())
+  let result = "";
+  if (Array.isArray(data) && /^\d+$/.test(field)) {
+    console.log('arr');
+    const index = parseInt(field);
+    if (index < data.length) {
+      result = data[index];
+      console.log(`data[${index}]`);
+    }
+  } else if (typeof data === "object" && typeof field === "string") {
+    result = data[field];
+    console.log(`data.${field}`);
+  }
+  document.getElementById("result").innerHTML =
+    result === "" ? "Invalid field" : JSON.stringify(result);
+
+  console.log(result)
+  console.log(typeof result);
+
+  if(Array.isArray(result) && result.length > 0){
+    const index = prompt(`Enter index 0 - ${result.length -1}: `);
+
+    console.log(index);
+    if(/^\d+$/.test(index) && index < result.length) {
+      document.getElementById('result').innerHTML = JSON.stringify(result[index])
+    } else {
+      result = "Invalid index";
+    }
+  }
+}
+
+
+      
+      function setField(field) {
+        document.getElementById("field").value = field;
+        getField();
+      }
+    </script>
+  </body>
+</html>
+
+ 
