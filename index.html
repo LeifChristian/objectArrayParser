@@ -107,7 +107,14 @@
       let data;
 
       function parseInput() {
+        const objectProperties = document.getElementById('objectProperties')
+        objectProperties.value = ''
         const input = document.getElementById("input").value;
+        const objectDiv = document.getElementById("objectProperties");
+        objectDiv.innerHTML=''
+        const f = document.getElementById('field')
+f.innerHTML =''
+        
         let title;
 
         try {
@@ -170,7 +177,7 @@
         
             if(result?.length && result){input.value = JSON.stringify(result); parseInput(); console.log(result, '<-- result');}
         
-            else{console.log("-->", input.value); input.value = result; parseInput(); console.log(result, "<-- result");}
+            else{console.log("-->", input.value); let bob = JSON.stringify(input.value);  result= JSON.parse(bob); input.value=result; parseInput(); console.log(result, "<-- result");}
           }
         }
       }
